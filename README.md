@@ -7,6 +7,7 @@ try out Docker from their web browser.
 
 1. [Docker](https://www.docker.com/) must be installed.
 2. [GoTTY](https://github.com/yudai/gotty) must be installed.
+3. [Python 3](https://www.python.org/) must be installed.
 
 ## Usage
 

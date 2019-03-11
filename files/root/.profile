@@ -36,6 +36,9 @@ ${underline}Things you should know${default}:
     will no longer be accessible.
   - If you need help with something, provide us with the ID above; it is
     unique to this sandbox.
+  
+${underline}Port mapping${default}:
+    Available ports: ${bold}${yellow}${PUBLISHED_PORTS}${default}
 
 ${bold}${green}Have fun!${default}
 

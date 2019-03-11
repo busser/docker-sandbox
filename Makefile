@@ -6,12 +6,7 @@ build:
 run:
 	gotty \
 		--config gotty/config \
-		docker run \
-			--interactive \
-			--tty \
-			--label docker-sandbox \
-			--privileged \
-			docker-sandbox
+		python3 start-sandbox.py
 
 clean:
 	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox); do \
