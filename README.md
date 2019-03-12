@@ -28,15 +28,14 @@ Users can now go to port 8080 to use a Docker sandbox.
 
 > Use `Ctrl+C` to exit GoTTY, disconnecting any users from their sandbox.
 
-Due to a [bug](https://github.com/yudai/gotty/issues/88) in GoTTY caused by
+~~Due to a [bug](https://github.com/yudai/gotty/issues/88) in GoTTY caused by
 an upstream [issue](https://github.com/moby/moby/issues/28872) in Docker,
 sandboxes that are not exited before the user closes their browser window will
-leave a running Docker container on your server.
+leave a running Docker container on your server.~~ This project now works
+around this issue by removing sandbox containers when the client closes the
+connection.
 
-Ideally, users should remember to exit the sandbox with the `exit` command, for
-example, before closing their browser window or tab.
-
-Remember to clean up ant remaining containers:
+This should not be necessary, but you can clean up any remaining containers:
 
 ```bash
 make clean
