@@ -1,12 +1,26 @@
 default: clean build run
 
-build:
-	docker build --tag docker-sandbox .
+build: build-sandbox
+
+build-sandbox:
+	docker build --tag docker-sandbox sandbox/
+
+build-server:
+	docker build --tag docker-sandbox-server server/
 
 run:
-	gotty --permit-write --title-format "Docker Sandbox" python3 start-sandbox.py
+	docker run \
+		--rm \
+		--detach \
+		--label docker-sandbox-server \
+		--mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock \
+		--publish 8080:8080 \
+		docker-sandbox-server
 
 clean:
+	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox-server); do \
+		docker rm --force --volumes $$container_id; \
+	done
 	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox); do \
 		docker rm --force --volumes $$container_id; \
 	done
