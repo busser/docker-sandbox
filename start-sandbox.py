@@ -6,7 +6,7 @@ import socket
 import subprocess
 
 # Define the number of ports to publish for each sandbox instance.
-num_port_to_publish = 3
+num_ports = 3
 
 
 # get_unused_port returns an unused port
@@ -19,7 +19,7 @@ def get_unused_port() -> int:
 
 ports_to_publish = sorted([
     get_unused_port() 
-    for _ in range(num_port_to_publish)
+    for _ in range(num_ports)
 ])
 
 docker_publish_args = []
