@@ -8,6 +8,7 @@ build-sandbox:
 build-server:
 	docker build --tag docker-sandbox-server server/
 
+
 run:
 	docker run \
 		--rm \
@@ -17,10 +18,15 @@ run:
 		--publish 8080:8080 \
 		docker-sandbox-server
 
-clean:
-	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox-server); do \
+
+clean: clean-server clean-sandbox
+
+clean-sandbox:
+	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox); do \
 		docker rm --force --volumes $$container_id; \
 	done
-	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox); do \
+
+clean-server:
+	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox-server); do \
 		docker rm --force --volumes $$container_id; \
 	done
