@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import os
+import signal
 import socket
+import subprocess
 
 # Define the number of ports to publish for each sandbox instance.
 num_port_to_publish = 3
@@ -25,17 +27,47 @@ for p in ports_to_publish:
     docker_publish_args.append('--publish')
     docker_publish_args.append('{port}:{port}'.format(port=p))
 
-# Replace current process with Docker command
-os.execvp(
-    'docker',
-    [
-        'docker', 'run',
-        '--interactive',
-        '--tty',
-        '--label', 'docker-sandbox',
-        '--privileged',
-    ] + docker_publish_args + [
-        '--env', 'PUBLISHED_PORTS=' + ' '.join([str(p) for p in ports_to_publish]),
-        'docker-sandbox',
-    ]
+# Create sandbox container in background and store its ID.
+docker_run_command = [
+    'docker', 'run',
+    '--detach',
+    '--label', 'docker-sandbox',
+    '--privileged',
+] + docker_publish_args + [
+    '--env', 'PUBLISHED_PORTS=' + ' '.join([str(p) for p in ports_to_publish]),
+    'docker-sandbox'
+]
+container_id = subprocess.check_output(
+    docker_run_command,
+    stderr=subprocess.STDOUT,
+).strip()
+
+docker_rm_command = [
+    'docker', 'rm',
+    '--force',
+    '--volumes',
+    container_id,
+]
+
+# Handle SIGHUP signal sent by GoTTY when connection is closed by client.
+def handle_sigterm(sig, frame):
+    print('Handling SIGHUP...')
+    subprocess.run(docker_rm_command, capture_output=True)
+signal.signal(signal.SIGHUP, handle_sigterm)
+
+# Create shell inside container.
+docker_exec_command = [
+    'docker', 'exec',
+    '--interactive',
+    '--tty',
+    container_id,
+    'bash', '--login',
+]
+docker_exec_output = subprocess.run(
+    docker_exec_command,
+    stderr=subprocess.STDOUT,
 )
+
+# Remove container when shell is closed.
+subprocess.run(docker_rm_command, capture_output=True)
+
