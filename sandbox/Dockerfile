@@ -2,6 +2,7 @@ FROM docker:18.09.2
 
 RUN apk add --no-cache \
     bash \
+    git \
     iptables \
     make \
     nano \
