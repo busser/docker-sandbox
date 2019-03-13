@@ -41,7 +41,8 @@ When you want to stop the server, run:
 make clean-server
 ```
 
-This should not be necessary, but you can clean up any remaining containers:
+If the server stops unexpectedly, you may need to clean up any remaining
+sandbox containers:
 
 ```bash
 make clean-sandbox
