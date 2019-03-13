@@ -11,7 +11,6 @@ build-server:
 
 run:
 	docker run \
-		--rm \
 		--detach \
 		--label docker-sandbox-server \
 		--mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock \
@@ -23,10 +22,12 @@ clean: clean-server clean-sandbox
 
 clean-sandbox:
 	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox); do \
-		docker rm --force --volumes $$container_id; \
+		docker stop $$container_id; \
+		docker rm --volumes $$container_id; \
 	done
 
 clean-server:
 	for container_id in $$(docker ps --all --quiet --filter label=docker-sandbox-server); do \
-		docker rm --force --volumes $$container_id; \
+		docker stop $$container_id; \
+		docker rm --volumes $$container_id; \
 	done
