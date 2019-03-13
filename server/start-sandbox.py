@@ -50,14 +50,13 @@ docker_rm_command = [
 ]
 
 # Handle SIGHUP signal sent by GoTTY when connection is closed by client.
-def handle_sigterm(sig, frame):
-    print('Handling SIGHUP...')
+def handle_signal(sig, frame):
     subprocess.run(
         docker_rm_command,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIP
+        stderr=subprocess.PIPE,
     )
-signal.signal(signal.SIGHUP, handle_sigterm)
+signal.signal(signal.SIGHUP, handle_signal)
 
 # Create shell inside container.
 docker_exec_command = [

@@ -1,6 +1,6 @@
 default: clean build run
 
-build: build-sandbox
+build: build-sandbox build-server
 
 build-sandbox:
 	docker build --tag docker-sandbox sandbox/
