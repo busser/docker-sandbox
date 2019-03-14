@@ -6,7 +6,7 @@ try out Docker from their web browser.
 ## Prerequisites
 
 1. [Docker](https://www.docker.com/) must be installed.
-2. [Python >=3.5](https://www.python.org/) must be installed.
+2. [Docker Compose](https://docs.docker.com/compose/) must be installed.
 
 ## Usage
 
@@ -14,36 +14,35 @@ Start by building the `docker-sandbox` Docker image. A container will be
 created from this image each time a user connects to the web page.
 
 ```bash
-make build-sandbox
+make --directory sandbox/ build
 ```
 
 Next, build the `docker-sandbox-server` Docker image. This will run a web
 server that will create the sandboxes.
 
 ```bash
-make build-server
+docker-compose build
 ```
 
 Now, run the web server:
 
 ```bash
-make run
+docker-compose up
 ```
 
-> This will fail if the web server is already running. In that case, use
-> `make clean-server run` instead.
+> This will (re-)build the server image.
 
 Users can now go to port 8080 to use a Docker sandbox.
 
 When you want to stop the server, run:
 
 ```bash
-make clean-server
+docker-compose down
 ```
 
 If the server stops unexpectedly, you may need to clean up any remaining
 sandbox containers:
 
 ```bash
-make clean-sandbox
+make --directory sandbox/ clean
 ```
